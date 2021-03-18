@@ -8,6 +8,7 @@ namespace IdentitySample.Controllers
         [Authorize]
         public ActionResult Index()
         {
+            var sda = "";
             return View();
         }
 
