@@ -1,0 +1,73 @@
+﻿@model IdentitySample.Models.LoginViewModel
+
+@{
+    ViewBag.Title = "Log in";
+}
+<div class="row justify-content-center">
+
+    <div class="col-lg-5 ">
+        <div class="card shadow-lg border-0 rounded-lg mt-5">
+            <div class="card-header"><h3 class="text-center font-weight-light my-4">Login</h3></div>
+            <div class="card-body">
+                <section id="loginForm">
+                    @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger", id = "messageHead" })
+                        <div class="form-group">
+                            <span>
+                                @Html.LabelFor(m => m.Email, new { @class = "small mb-1", @for = "inputEmailAddress" })
+                                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                            </span>
+                            @Html.TextBoxFor(m => m.Email, new
+                            {
+                                @class = "form-control",
+                                id = "inputEmailAddress",
+                                placeholder = "Enter email address"
+                            })
+
+                        </div>
+                        <div class="form-group">
+                            <span>
+                                @Html.LabelFor(m => m.Password, new { @class = "small mb-1", @for = "inputPassword" })
+                                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                            </span>
+                            @Html.PasswordFor(m => m.Password, new
+                            {
+                                @class = "form-control",
+                                placeholder = "Enter password",
+                                id = "inputPassword"
+                            })
+
+                            @*<input class="form-control py-4" id="inputPassword" type="password" placeholder="Enter password" />*@
+                        </div>
+                        <div class="form-group">
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" id="rememberPasswordCheck" type="checkbox" />
+                                <label class="custom-control-label" for="rememberPasswordCheck">Remember password</label>
+                            </div>
+                        </div>
+                        <div class="form-group d-flex align-items-center justify-content-between mt-4 mb-0">
+                            @Html.ActionLink("Forgot Password", "ForgotPassword", "Account", null, new { @class = "small" })
+                            @*<a class="btn btn-primary" href="index.html">Login</a>*@
+                            <input type="submit" value="Login" class="btn btn-primary" />
+                        </div>
+                    }
+                </section>
+            </div>
+            <div class="card-footer text-center">
+                <div class="small">
+                    @Html.ActionLink("Need an account? Sign up!", "Register", "Account", null, new { @class = "small" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+<script>
+        $("#messageHead ul").css("list-style", "none");
+        $("#Email").attr("aria-describedby", "emailHelp");
+</script>
+}

@@ -1,0 +1,45 @@
+﻿
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+/*input,
+select,
+textarea {
+    max-width: 280px;
+}*/
+
+/* styles for validation helpers */
+.field-validation-error {
+    color: #b94a48;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+input.input-validation-error {
+    border: 1px solid #b94a48;
+}
+
+input[type="checkbox"].input-validation-error {
+    border: 0 none;
+}
+
+.validation-summary-errors {
+    color: #b94a48;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+.btn-date {
+    -webkit-appearance: none;
+    color: transparent;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAAzUExURTExMTIyMnZ2digoKCUlJS8vLy0tLXx8fCsrKyYmJiwsLDAwMCoqKikpKS4uLjMzM////0xRuPwAAAARdFJOU/////////////////////8AJa2ZYgAAAINJREFUeNrkk0sKgDAMRBPrP2b0/qfVVouxVkQQNw5MyJTXkC5K043oO6AoC3NqUgS0VgOYROsFV3HluqiQtiEBUAiPLIhak+4AxpzwALh9phtycjvQIqf2zSXBW2fNFpCl9InFAr4fEuMwQTvtEx8m+IrE9L8dGhLIyc3XX+9SswADAB1tOc90ctrVAAAAAElFTkSuQmCC);
+}

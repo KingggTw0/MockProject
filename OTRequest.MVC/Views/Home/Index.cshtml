@@ -1,0 +1,139 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+@*<div id="search-section">
+        <form id="suggestion_form" name="gs" method="get" action="#">
+            <div class="searchText">
+
+                <input type="text" name="q" class="searchText" placeholder="Enter your domain here..." autocomplete="on">
+                <ul>
+                    <li><label><input type="checkbox" name="ext_com" value="1"><span>.com <em>($10/yr)</em></span></label></li>
+                    <li><label><input type="checkbox" name="ext_net" value="1"><span>.net <em>($12/yr)</em></span></label></li>
+                    <li><label><input type="checkbox" name="ext_org" value="1"><span>.org <em>($8/yr)</em></span></label></li>
+                    <li><label><input type="checkbox" name="ext_in" value="1"><span>.in <em>($6/yr)</em></span></label></li>
+                </ul>
+            </div>
+            <input type="submit" name="results" class="main-button" value="Search Now">
+        </form>
+        <div class="advSearch_chkbox">
+        </div>
+    </div>*@
+@*<div class="col-md-4">
+        <dl>
+            <dt>Register a user and login</dt>
+            <dd>
+                Click @Html.ActionLink("Register", "Register", "Account") and see the code in AccountController.cs and Register Action.
+                Click @Html.ActionLink("Log in", "Login", "Account") and see the code in AccountController.cs and Login Action.
+            </dd>
+        </dl>
+    </div>*@
+<div class="header-text bg-light caption p-2">
+
+    <h2 class="card-header bg-light text-dark">My Requested OT</h2>
+    <div class="form-inline justify-content-around">
+        <div class="form-group nav navbar">
+            <label class="mr-2">From Date</label>
+            <input class="form-control" id="datetimepickerStart" type="text" readonly />
+            <button class="btn form-control btn-date" id="StartDate"></button>
+        </div>
+        <div class="form-group nav navbar">
+            <label class="mr-2">To Date</label>
+            <input class="form-control" id="datetimepickerEnd" type="text" readonly />
+            <button class="btn form-control btn-date" id="EndDate"></button>
+        </div>
+        <div class=" form-group nav navbar">
+            <label class="mr-2">Type</label>
+            <select class="form-control">
+                <option></option>
+                <option>Halu Halu</option>
+                <option>Hasagi</option>
+                <option>AAAAAAa</option>
+            </select>
+        </div>
+        <div class=" form-group nav navbar">
+            <label class="mr-2">Project</label>
+            <input class="form-control" />
+        </div>
+        <button class="btn btn-outline-success">Search</button>
+    </div>
+    <br />
+    <div class="my-2">
+        <table class="table table-bordered table-responsive" id="myTable">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>OT date</th>
+                    <th>Type</th>
+                    <th>Project Code</th>
+                    <th>Working Code</th>
+                    <th>Guest house</th>
+                    <th t>Deny OT</th>
+                    <th>Undo Deny OT</th>
+                    <th>Requestor</th>
+                    <th>Request time</th>
+                    <th>Approver</th>
+                    <th>Approver time</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>vvviuih</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="text-left">
+        <button class="btn btn-outline-success" onclick="alert($('#datetimepickerStart').val())"> Submit changes</button>
+        &nbsp;
+        <button class="btn btn-outline-success"> Discard changes</button>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/Scripts/jquery.datetimepicker.js"></script>
+    <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
+    <script>
+        $(function () {
+            $('#myTable').DataTable();
+            $("#datetimepickerStart").datetimepicker({
+                timepicker: false,
+                format: 'm/d/Y',
+                onShow: function (ct) {
+                    this.setOptions({
+                        maxDate: $('#datetimepickerEnd').val() ? $('#datetimepickerEnd').val() : false
+                    })
+                }
+            });
+
+            $("#datetimepickerEnd").datetimepicker({
+                timepicker: false,
+                format: 'm/d/Y',
+                onShow: function (ct) {
+                    this.setOptions({
+                        minDate: $('#datetimepickerStart').val() ? $('#datetimepickerStart').val() : false
+                    })
+                }
+            });
+        })
+        $("#StartDate").click(function () {
+            $("#datetimepickerStart").datetimepicker('show');
+        });
+        $("#EndDate").click(function () {
+            $("#datetimepickerEnd").datetimepicker('show');
+        })
+
+
+    </script>
+}
