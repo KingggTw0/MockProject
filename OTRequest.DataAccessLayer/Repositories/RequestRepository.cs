@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
@@ -40,9 +41,9 @@
             return this.otContext.Requests.Find(requestId);
         }
 
-        public IList<Request> FindRequestByManager(int managerId)
+        public IList<Request> FindRequestByManager(string managerId)
         {
-            var listRequest = this.otContext.Requests.Where(r => r.Project.ManageId == managerId).ToList();
+            var listRequest = this.otContext.Requests.Where(r => r.Project.ManagerId == managerId).ToList();
             return listRequest;
         }
 
@@ -60,7 +61,7 @@
 
         public void UpdateRequest(Request request)
         {
-            this.otContext.Entry(request).State = System.Data.Entity.EntityState.Modified;
+            this.otContext.Entry(request).State = EntityState.Modified;
             this.otContext.SaveChanges();
         }
 

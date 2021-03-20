@@ -4,11 +4,10 @@ namespace IdentitySample.Controllers
 {
     public class HomeController : Controller
     {
-        [HttpGet]
         [Authorize]
+        [HttpGet]
         public ActionResult Index()
         {
-            var sda = "";
             return View();
         }
 

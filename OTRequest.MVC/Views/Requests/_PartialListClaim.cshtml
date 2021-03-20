@@ -1,0 +1,101 @@
+﻿@model ICollection<OTRequest.Core.Models.Request>
+
+<div class="header-text bg-light caption p-2">
+    <h2 class="text-dark">@ViewBag.status</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover" id="myTableClaim">
+            <thead>
+                <tr>
+                    <th>
+                        Claim ID
+                    </th>
+                    <th>
+                        Staff Name
+                    </th>
+                    <th>
+                        Project Name
+                    </th>
+                    <th>
+                        Project Duration
+                    </th>
+                    <th>
+                        Total Working hour
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Count == 0)
+                {
+                    <tr>
+                        <td colspan="6" class="alert alert-dark">No data</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td><a href="@Url.Action("Details","Requests",new {id=item.Id })">@item.Id</a></td>
+                            <td>@item.User</td>
+                            <td>@item.Project.ProjectName</td>
+                            <td>@item.Project.DateStart.ToString("MM/dd/yyyy") - @item.Project.DateEnd.ToString("MM/dd/yyyy")</td>
+                            <td>@item.TotalHours</td>
+                            <td class="">
+                                <a href="@Url.Action("Edit","Requests",new { id=item.Id})" class="EditRequest" data-toggle="modal" title="Edit" data-iditem="@item.Id">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="@Url.Action("Delete","Requests",new { id=item.Id})" title="Delete" data-toggle="modal" class="DeleteRequest" data-iditem="@item.Id">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="Modal">
+
+</div>
+@section Scripts{
+    <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
+    <script>
+        $(function () {
+            $('#myTableClaim').DataTable();
+        });
+        $('.EditRequest').click(function () {
+            // AJAX request
+            $.ajax({
+                url: this.href,
+                type: 'get',
+                success: function (response) {
+                    $('#Modal').html(response);
+                    $('.modal').modal('show');
+                }
+            });
+        });
+        $('.DeleteRequest').click(function () {
+            // AJAX request
+            $.ajax({
+                url: this.href,
+                type: 'get',
+                success: function (response) {
+                    $('#Modal').html(response);
+                    $('.modal').modal('show');
+                }
+            });
+        });
+
+                //$('#ModalEdit').on('show.bs.modal', function (event) {
+                //    var button = $(event.relatedTarget) // Button that triggered the modal
+                //    var recipient = button.data('whatever') // Extract info from data-* attributes
+                //    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                //    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                //    //var modal = $(this)
+                //    //modal.find('.modal-title').text('New message to ' + recipient)
+                //    //modal.find('.modal-body input').val(recipient)
+                //})
+    </script>
+}

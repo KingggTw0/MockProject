@@ -33,7 +33,7 @@
         /// </summary>
         /// <param name="managerId"></param>
         /// <returns></returns>
-        IList<Request> FindRequestByManager(int managerId);
+        IList<Request> FindRequestByManager(string managerId);
 
         /// <summary>
         /// Find list request with userId.

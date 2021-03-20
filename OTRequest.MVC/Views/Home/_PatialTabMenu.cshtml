@@ -1,8 +1,8 @@
 ﻿
-<header class="background-header">
+<header class="">
     <nav class="navbar navbar-expand-lg">
         <div class="container">
-            <a class="navbar-brand" href="index.html">
+            <a class="navbar-brand" href="@Url.Action("Index","Home")">
                 <h2>OT <em>Request</em></h2>
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -19,14 +19,14 @@
                     <li>
                         <div class="dropdown">
                             <a class="nav-link btn dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                MyClaim
+                                My Claim
                             </a>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                                <a class="dropdown-item" href="#">Draft</a>
-                                <a class="dropdown-item" href="#">Pending Approval</a>
-                                <a class="dropdown-item" href="#">Approved</a>
-                                <a class="dropdown-item" href="#">Paid</a>
-                                <a class="dropdown-item" href="#">Rejected Or Cancelled</a>
+                                <a class="dropdown-item" href="@Url.Action("ListMyClaim","Requests",new { status="Draft"})">Draft</a>
+                                <a class="dropdown-item" href="@Url.Action("ListMyClaim","Requests",new { status="Pending Approval"})">Pending Approval</a>
+                                <a class="dropdown-item" href="@Url.Action("ListMyClaim","Requests",new { status="Approved"})">Approved</a>
+                                <a class="dropdown-item" href="@Url.Action("ListMyClaim","Requests",new { status="Paid"})">Paid</a>
+                                <a class="dropdown-item" href="@Url.Action("ListMyClaim","Requests",new { status="Rejected Or Cancelled"})">Rejected Or Cancelled</a>
                             </div>
                         </div>
                     </li>
@@ -37,8 +37,9 @@
                                 Claim for Approval
                             </a>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                                <a class="dropdown-item" href="#">For my Vetting</a>
-                                <a class="dropdown-item" href="#">Approved or Paid</a>
+                                <a class="dropdown-item" href="@Url.Action("ListForApproval","Requests",new { status="For my Vetting"})">For my Vetting</a>
+                                <a class="dropdown-item" href="@Url.Action("ListForApproval","Requests",new { status="For my Vetting"})">Approved</a>
+                                <a class="dropdown-item" href="@Url.Action("ListForApprovalPaid","Requests",new { status="For my Vetting"})">Paid</a>
                             </div>
                         </div>
                     </li>
@@ -51,7 +52,6 @@
                             <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
                                 <a class="dropdown-item" href="#">Approved</a>
                                 <a class="dropdown-item" href="#">Paid</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
                             </div>
                         </div>
                     </li>

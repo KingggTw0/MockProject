@@ -13,6 +13,11 @@ namespace IdentitySample.Models
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
     { 
+        //// Add field for User
+        public string Department { get; set; }
+        public string JobRank { get; set; }
+        public decimal Salary { get; set; }
+        
         [ForeignKey("UserId")]
         public virtual ICollection<UserProjectMap> UserProjectMaps { get; set; }
 

@@ -185,6 +185,8 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\ClaimViewModel.cs" />
+    <Compile Include="ViewModels\DeverloperViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\css\flex-slider.css" />
@@ -195,6 +197,7 @@
     <Content Include="assets\fonts\fontawesome-webfont.svg" />
     <Content Include="assets\fonts\slick.svg" />
     <Content Include="assets\images\banner-bg.jpg" />
+    <Content Include="assets\images\error-404-monochrome.svg" />
     <Content Include="assets\images\feature-01.png" />
     <Content Include="assets\images\footer-bg.jpg" />
     <Content Include="assets\images\heading-bg.jpg" />
@@ -637,10 +640,18 @@
     <Content Include="Views\Projects\Index.cshtml" />
     <Content Include="Views\Shared\_PatialFooter.cshtml" />
     <Content Include="Views\Home\_PatialTabMenu.cshtml" />
+    <Content Include="Views\Requests\_PartialListClaim.cshtml" />
+    <Content Include="Views\Requests\_PartialForApproval.cshtml" />
+    <Content Include="Views\Requests\_PartialForFinance.cshtml" />
+    <Content Include="Views\Requests\_PartialForApprovalPaid.cshtml" />
+    <Content Include="Views\Requests\_PartialStaffInformation.cshtml" />
+    <Content Include="Views\Requests\_PartialProjectInformation.cshtml" />
+    <Content Include="Views\Requests\Edit.cshtml" />
+    <Content Include="Views\Shared\Page404.cshtml" />
+    <Content Include="Views\Requests\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Requests\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

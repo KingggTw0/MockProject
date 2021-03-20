@@ -13,6 +13,7 @@ namespace OTRequest.MVC.Controllers
     public class RequestsController : Controller
     {
         private RequestRepository requestRepo = new RequestRepository();
+        private int IdRequest;
 
         // GET: Requests
         public ActionResult Index()
@@ -60,6 +61,7 @@ namespace OTRequest.MVC.Controllers
         }
 
         // GET: Requests/Edit/5
+        [HttpGet]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -69,9 +71,33 @@ namespace OTRequest.MVC.Controllers
             Request request = requestRepo.FindRequestById(id.Value);
             if (request == null)
             {
-                return HttpNotFound();
+                return View("Page404");
             }
             return View(request);
+        }
+        public int RequestId(int id)
+        {
+            IdRequest = id;
+            return IdRequest;
+        }
+
+        [Authorize]
+        public ActionResult ApproveClaim([Bind(Include = "Id,User,DepartmentName,Status,TotalRemarks,TotalHours,ProjectId")] Request request)
+        {
+            if (request.Status == "Pending Approval")
+            {
+                request.Status = "Approved";
+            }
+            else if (request.Status == "Dratf")
+            {
+                request.Status = "Pending Approval";
+            }
+            else
+            {
+                return View(request);
+            }
+            requestRepo.UpdateRequest(request);
+            return RedirectToAction("Index");
         }
 
         // POST: Projects/Edit/5
@@ -99,7 +125,7 @@ namespace OTRequest.MVC.Controllers
             Request request = requestRepo.FindRequestById(id.Value);
             if (request == null)
             {
-                return HttpNotFound();
+                return View("Page404");
             }
             return View(request);
         }
@@ -112,7 +138,30 @@ namespace OTRequest.MVC.Controllers
             requestRepo.DeletedRequestById(id);
             return RedirectToAction("Index");
         }
+        public ActionResult ListMyClaim(string status)
+        {
+            string userAccount = User.Identity.GetUserName();
+            var listRequest = requestRepo.FindRequestByUser(userAccount);
 
+            ViewBag.status = status;
+            var listRequestByStatus = listRequest.Where(x => x.Status == status).ToList();
+            return View("_PartialListClaim", listRequestByStatus);
+        }
+
+        //// kết nối với Claim For Approval test
+        public ActionResult ListForApproval(string status)
+        {
+            ViewBag.status = status;
+            var listForApproval = requestRepo.FindRequestByProject(1);
+            return View("_PartialForApproval", listForApproval);
+        }
+        //// kết nối với Claim For Approval by Paid test
+        public ActionResult ListForApprovalPaid(string paid)
+        {
+            ViewBag.paid = paid;
+            var listForApprovalPaid = requestRepo.FindRequestByProject(1);
+            return View("_PartialForApprovalPaid", listForApprovalPaid);
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

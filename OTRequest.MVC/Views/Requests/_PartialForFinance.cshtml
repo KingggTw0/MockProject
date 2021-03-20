@@ -1,0 +1,51 @@
+﻿
+
+
+
+<div class="header-text bg-light caption p-2">
+    <h2 class="text-dark">@ViewBag.status</h2>
+    <div>
+        <table class="table table-bordered" id="myTableFinance">
+            <thead>
+                <tr>
+                    <th>
+                        Claim ID
+                    </th>
+                    <th>
+                        Staff Name
+                    </th>
+                    <th>
+                        Projiect Name
+                    </th>
+                    <th>
+                        Project Duration
+                    </th>
+                    <th>
+                        Total Working hour
+                    </th>
+                    <th>
+                        Total Claim Amount
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
+    <script>
+        $(function () {
+            $('#myTableFinance').DataTable();
+        });
+    </script>
+}
