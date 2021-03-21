@@ -12,7 +12,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete this?</p>
+                <p>Please click <b>'OK'</b> to delete the claim or <b>'Cancel'</b> to the close the dialog.</p>
             </div>
 
             @using (Html.BeginForm("Delete", "Requests", null, FormMethod.Post, new { id = "delItem" }))
@@ -20,8 +20,8 @@
                 @Html.AntiForgeryToken()
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <input type="submit" value="Delete" class="btn btn-danger" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <input type="submit" value="OK" class="btn btn-danger" />
                 </div>
             }
 

@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\DetailRequestRepository.cs" />
     <Compile Include="Repositories\Interface\IProjectRepository.cs" />
     <Compile Include="Repositories\Interface\IRequestRepository.cs" />
     <Compile Include="Repositories\ProjectRepository.cs" />

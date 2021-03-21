@@ -1,10 +1,7 @@
-﻿
-
-
-
+﻿@model ICollection<OTRequest.Core.Models.Request>
 <div class="header-text bg-light caption p-2">
     <h2 class="text-dark">@ViewBag.status</h2>
-    <div>
+    <div class="table-responsive">
         <table class="table table-bordered" id="myTableFinance">
             <thead>
                 <tr>
@@ -26,26 +23,184 @@
                     <th>
                         Total Claim Amount
                     </th>
+                    <th>
+                        @if (ViewBag.status == "Approved")
+                        {
+                            <input type="checkbox" name="AllCheck" />
+                        }
+                    </th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+                @if (Model.Count == 0)
+                {
+                    <tr>
+                        <td colspan="7" class="bg-secondary">No data</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@item.User</td>
+                            <td>@item.Project.ProjectName</td>
+                            <td>@item.Project.DateStart.ToString("MM/dd/yyyy") - @item.Project.DateEnd.ToString("MM/dd/yyyy")</td>
+                            <td>@item.TotalHours</td>
+                            <td>@(item.TotalHours*100000)</td>
+                            <td>
+                                @if (ViewBag.status == "Approved")
+                                {
+                                    <input class="" type="checkbox" name="check" value="@item.Id" />
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
             </tbody>
         </table>
+
+        <div class="float-right my-2">
+            @if (ViewBag.status == "Approved")
+            {
+                <a href="#" data-toggle="modal" data-target="#DialogPaid" class="btn btn-success" id="btnPaid">Paid</a>
+            }
+            @if (ViewBag.status == "Paid")
+            {
+                <a class="btn btn-primary" id="btnDownload">DownLoad</a>
+            }
+        </div>
+
     </div>
 </div>
+
+<div class="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" id="DialogPaid" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalLabel">Approval item</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @*<div class="form-group" id="formRemark">
+                    <label for="remarkClaim" class="col-form-label">Remarks</label>
+                    <textarea type="text" class="form-control" id="remarkClaim"></textarea>
+                </div>*@
+                <p>Please click <b>'OK'</b> to <b id="actionTitle"></b> the claim or <b>'Cancel'</b> to the close the dialog.</p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <a href="" id="submit" data-toggle="modal" class="btn btn-primary">OK</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="position-fixed bottom-0 right-0 p-3" style="z-index: 5; right: 0; bottom: 0;">
+    <div class="alert-success" id="alertbg">
+        <div class="alert alert-dismissible" role="alert">
+
+            <strong id="typeAlert">Successfully!</strong> <content> You should check in on some of those fields below.</content>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+        </div>
+    </div>
+</div>
+
 @section Scripts{
     <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
     <script>
         $(function () {
             $('#myTableFinance').DataTable();
         });
+
+        $(document).ready(function () {
+            $("input[name='AllCheck']").on("click", function () {
+                if ($(this).is(":checked")) {
+                    $("input[name='check']").attr("checked", true);
+                } else {
+                    $("input[name='check']").attr("checked", false);
+                }
+            });
+            $(".alert").hide();
+        });
+
+        var status = "";
+        $("#DialogPaid").on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            //var recipient = button.data('whatever') // Extract info from data-* attributes
+            //    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            //    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this);
+            status = button.text();
+            if (status == "Return") {
+                $("#formRemark").show();
+            } else {
+                $("#formRemark").hide();
+            }
+            modal.find('#actionTitle').text(status.toLowerCase());
+            modal.find('#ModalLabel').text("This action will ".concat(status.toLowerCase(), " Claim."));
+            modal.find('.modal-footer #submit').attr("href", "/Requests/PaidClaim/");
+
+        });
+
+        $(".modal-footer #submit").click(function () {
+            var data = [];
+            $("input[name='check']:checked").each(function (index, element) {
+                data.push($(this).val());
+            });
+
+            $.ajax({
+                url: this.href,
+                method: 'get',
+                data: { listid: data.toString() },
+            }).done(function (msg) {
+                $(".alert").show();
+
+                if (msg == "success") {
+                    $("#alertbg").attr("class", "alert-success");
+                    $("#typeAlert").text("Successfully !");
+                    $(".alert content").text("you should check in on some of those fields below.");
+                } else if (msg == "fail") {
+                    $("#alertbg").attr("class", "alert-danger");
+                    $("#typeAlert").text("Error !");
+                    $(".alert content").text("you should check in on some of those fields below.");
+                } else {
+                    $("#alertbg").attr("class", "alert-warning");
+                    $("#typeAlert").text("Warning !");
+                    $(".alert content").text("You should choose at least one Claim for Change.");
+                }
+                $("#DialogPaid").modal('hide');
+
+                setTimeout(function () {
+                    $(".alert").hide();
+                }, 1500);
+
+                if (msg == "success") {
+                    location.reload();
+                }
+            });
+        });
+
+
+        $("#btnDownload").click(function () {
+            exportF($(this));
+        });
+
+        function exportF(elem) {
+            var table = document.getElementById("myTableFinance");
+            var html = table.outerHTML;
+            var url = 'data:application/vnd.ms-excel,' + escape(html); // Set your html table into url
+            elem.attr("href", url);
+            elem.attr("download", "TemplateExportClaim.xls"); // Choose the file name
+            return false;
+        }
     </script>
 }

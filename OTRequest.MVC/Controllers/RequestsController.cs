@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using IdentitySample.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using OTRequest.Core.Models;
 using OTRequest.DataAccessLayer.Repositories;
 using System;
@@ -13,7 +15,8 @@ namespace OTRequest.MVC.Controllers
     public class RequestsController : Controller
     {
         private RequestRepository requestRepo = new RequestRepository();
-        private int IdRequest;
+        private DetailRequestRepository detailRepo = new DetailRequestRepository();
+        private OTRequestContext context = new OTRequestContext();
 
         // GET: Requests
         public ActionResult Index()
@@ -33,7 +36,7 @@ namespace OTRequest.MVC.Controllers
             Request request = requestRepo.FindRequestById(id.Value);
             if (request == null)
             {
-                return HttpNotFound();
+                return View("Page404");
             }
             return View(request);
         }
@@ -75,30 +78,7 @@ namespace OTRequest.MVC.Controllers
             }
             return View(request);
         }
-        public int RequestId(int id)
-        {
-            IdRequest = id;
-            return IdRequest;
-        }
 
-        [Authorize]
-        public ActionResult ApproveClaim([Bind(Include = "Id,User,DepartmentName,Status,TotalRemarks,TotalHours,ProjectId")] Request request)
-        {
-            if (request.Status == "Pending Approval")
-            {
-                request.Status = "Approved";
-            }
-            else if (request.Status == "Dratf")
-            {
-                request.Status = "Pending Approval";
-            }
-            else
-            {
-                return View(request);
-            }
-            requestRepo.UpdateRequest(request);
-            return RedirectToAction("Index");
-        }
 
         // POST: Projects/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
@@ -136,7 +116,7 @@ namespace OTRequest.MVC.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             requestRepo.DeletedRequestById(id);
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
         }
         public ActionResult ListMyClaim(string status)
         {
@@ -144,23 +124,99 @@ namespace OTRequest.MVC.Controllers
             var listRequest = requestRepo.FindRequestByUser(userAccount);
 
             ViewBag.status = status;
-            var listRequestByStatus = listRequest.Where(x => x.Status == status).ToList();
+            var listRequestByStatus =
+                status != "Rejected Or Cancelled" ? listRequest.Where(x => x.Status == status).ToList()
+                : listRequest.Where(x => x.Status == "Rejected" || x.Status == "Cancelled").ToList();
+
             return View("_PartialListClaim", listRequestByStatus);
         }
 
         //// kết nối với Claim For Approval test
+        [Authorize]
         public ActionResult ListForApproval(string status)
         {
             ViewBag.status = status;
-            var listForApproval = requestRepo.FindRequestByProject(1);
-            return View("_PartialForApproval", listForApproval);
+            string userAccount = User.Identity.GetUserName();
+            string idUser = User.Identity.GetUserId();
+
+            var listForApproval = requestRepo.FindRequestByManager(idUser).ToList();
+
+            return View("_PartialForApproval", listForApproval.Where(x => x.Status == status).ToList());
         }
+
         //// kết nối với Claim For Approval by Paid test
-        public ActionResult ListForApprovalPaid(string paid)
+        [Authorize]
+        public ActionResult ListForFinance(string status)
         {
-            ViewBag.paid = paid;
-            var listForApprovalPaid = requestRepo.FindRequestByProject(1);
-            return View("_PartialForApprovalPaid", listForApprovalPaid);
+            ViewBag.status = status;
+            var listForFinance = context.Requests.Where(x => x.Status == status).ToList();
+            return View("_PartialForFinance", listForFinance);
+        }
+
+        public string PaidClaim(string ListId)
+        {
+            if (string.IsNullOrEmpty(ListId)) return "warning";
+            var list = ListId.Split(',');
+
+            foreach (var id in list)
+            {
+                if (!string.IsNullOrEmpty(id))
+                {
+                    try
+                    {
+                        var item = requestRepo.FindRequestById(int.Parse(id));
+                        item.Status = "Paid";
+                        requestRepo.UpdateRequest(item);
+                    }
+                    catch
+                    {
+                        return "fail";
+                    }
+
+                }
+            }
+            return "success";
+        }
+
+        public string ApprovalClaim(string ListId, string status, string remark)
+        {
+            if (string.IsNullOrEmpty(ListId)) return "warning";
+            var list = ListId.Split(',');
+            foreach (var id in list)
+            {
+                if (!string.IsNullOrEmpty(id))
+                {
+                    try
+                    {
+                        var item = requestRepo.FindRequestById(int.Parse(id));
+                        switch (status)
+                        {
+                            case "Approve":
+                                item.Status = "Approved";
+                                break;
+                            case "Return":
+                                item.Status = "Draft";
+                                var Detail = detailRepo.GetDetailRequest(int.Parse(id));
+                                Detail.Remark = remark;
+                                Detail.RequestDay = DateTime.Now;
+
+                                detailRepo.AddDetailRequest(Detail);
+                                break;
+                            case "Reject":
+                                item.Status = "Rejected";
+                                break;
+                            default:
+                                return "fail";
+                        }
+                        requestRepo.UpdateRequest(item);
+                    }
+                    catch
+                    {
+                        return "fail";
+                    }
+                }
+            }
+            return "success";
         }
         protected override void Dispose(bool disposing)
         {

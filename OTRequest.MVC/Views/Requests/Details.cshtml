@@ -1,66 +1,61 @@
 ﻿@model OTRequest.Core.Models.Request
-
 @{
-    ViewBag.Title = "Details";
+    Layout = null;
 }
-
-<h2>Details</h2>
-
-<div>
-    <h4>Request</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Project.ProjectName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Project.ProjectName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.User)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.User)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.DepartmentName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DepartmentName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.TotalRemarks)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.TotalRemarks)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.TotalHours)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.TotalHours)
-        </dd>
-
-    </dl>
+<div class="modal" id="ModalDetail" aria-hidden="true" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Detail Request ID:@Model.Id</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="float-right">Status: @Model.Status</p>
+                <div class="">
+                    <span>Staff Name:</span>
+                    <b>@Model.User</b>
+                </div>
+                <div class="">
+                    <span>Staff Department:</span>
+                    <b>@Model.DepartmentName</b>
+                </div>
+                <div class="">
+                    <span>Project Name:</span>
+                    <b>@Model.Project.ProjectName</b>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>From</th>
+                                <th>To</th>
+                                <th>Total No. of Hours</th>
+                                <th>Remarks</th>
+                                <th>Total working hour</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.DetailRequests)
+                            {
+                                <tr>
+                                    <td>@item.StartRequestDate.ToString("MM/dd/yyyy")- @item.EndRequestDate.ToString("MM/dd/yyyy")</td>
+                                    <td>@item.From.ToString("MM/dd/yyyy")</td>
+                                    <td>@item.To.ToString("MM/dd/yyyy")</td>
+                                    <td>@Model.TotalHours</td>
+                                    <td>@item.Remark</td>
+                                    <td>@item.TotalHours</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>

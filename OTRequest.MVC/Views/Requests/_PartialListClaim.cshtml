@@ -36,18 +36,24 @@
                     foreach (var item in Model)
                     {
                         <tr>
-                            <td><a href="@Url.Action("Details","Requests",new {id=item.Id })">@item.Id</a></td>
+                            <td><a href="@Url.Action("Details","Requests",new {id=item.Id })" class="DetailRequest" data-toggle="modal">@item.Id</a></td>
                             <td>@item.User</td>
                             <td>@item.Project.ProjectName</td>
                             <td>@item.Project.DateStart.ToString("MM/dd/yyyy") - @item.Project.DateEnd.ToString("MM/dd/yyyy")</td>
                             <td>@item.TotalHours</td>
                             <td class="">
-                                <a href="@Url.Action("Edit","Requests",new { id=item.Id})" class="EditRequest" data-toggle="modal" title="Edit" data-iditem="@item.Id">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <a href="@Url.Action("Delete","Requests",new { id=item.Id})" title="Delete" data-toggle="modal" class="DeleteRequest" data-iditem="@item.Id">
-                                    <i class="fas fa-trash"></i>
-                                </a>
+                                @if (item.Status == "Draft")
+                                {
+                                    <a href="@Url.Action("Edit", "Requests", new { id = item.Id })" class="EditRequest" data-toggle="modal" title="Edit" data-iditem="@item.Id">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                }
+                                @if (item.Status == "Cancelled" || item.Status == "Rejected")
+                                {
+                                    <a href="@Url.Action("Delete", "Requests", new { id = item.Id })" title="Delete" data-toggle="modal" class="DeleteRequest" data-iditem="@item.Id">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                }
                             </td>
                         </tr>
                     }
@@ -55,6 +61,7 @@
             </tbody>
         </table>
     </div>
+
 </div>
 <div id="Modal">
 
@@ -77,6 +84,18 @@
             });
         });
         $('.DeleteRequest').click(function () {
+            // AJAX request
+            $.ajax({
+                url: this.href,
+                type: 'get',
+                success: function (response) {
+                    $('#Modal').html(response);
+                    $('.modal').modal('show');
+                }
+            });
+        });
+
+        $('.DetailRequest').click(function () {
             // AJAX request
             $.ajax({
                 url: this.href,
